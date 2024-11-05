@@ -5,7 +5,7 @@ const ItemList = () => {
     const [items, setItems] = useState([]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [image, setImage] = useState(null);  // To store the selected image
+    const [image, setImage] = useState(null);
     const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
@@ -16,6 +16,7 @@ const ItemList = () => {
         const res = await axios.get('http://localhost:8000/api/items/');
         setItems(res.data);
     };
+
     const fileInputRef = React.useRef(null);
 
     const handleSubmit = async (e) => {
@@ -66,7 +67,7 @@ const ItemList = () => {
     const handleEdit = (item) => {
         setName(item.name);
         setDescription(item.description);
-        setImage(null);  // Reset the image when editing (not required, but can be useful)
+        setImage(null);
         setEditingId(item.id);
     };
 
@@ -78,8 +79,7 @@ const ItemList = () => {
         <div className="container mx-auto p-6">
             <h1 className="text-3xl font-bold mb-6 text-center">Item List</h1>
 
-            {/* Item List */}
-            {/* Table structure */}
+
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="min-w-full table-auto">
                     <thead className="bg-gray-100 text-gray-700">
