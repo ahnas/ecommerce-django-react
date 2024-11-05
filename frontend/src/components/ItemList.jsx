@@ -5,6 +5,7 @@ const ItemList = () => {
     const [items, setItems] = useState([]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [price, setPrice] = useState(0);
     const [image, setImage] = useState(null);
     const [editingId, setEditingId] = useState(null);
 
@@ -24,6 +25,7 @@ const ItemList = () => {
 
         const formData = new FormData();
         formData.append('name', name);
+        formData.append('price', price);
         formData.append('description', description);
         if (image) {
             formData.append('image', image);  // Append image if provided
@@ -47,6 +49,7 @@ const ItemList = () => {
             }
 
             setName('');
+            setPrice('');
             setDescription('');
             setImage(null);  // Clear the image after submitting
             setEditingId(null);
@@ -66,6 +69,7 @@ const ItemList = () => {
 
     const handleEdit = (item) => {
         setName(item.name);
+        setPrice(item.price);
         setDescription(item.description);
         setImage(null);
         setEditingId(item.id);
@@ -85,6 +89,7 @@ const ItemList = () => {
                     <thead className="bg-gray-100 text-gray-700">
                         <tr>
                             <th className="py-3 px-6 text-left font-semibold">Name</th>
+                            <th className="py-3 px-6 text-left font-semibold">Price</th>
                             <th className="py-3 px-6 text-left font-semibold">Description</th>
                             <th className="py-3 px-6 text-center font-semibold">Image</th>
                             <th className="py-3 px-6 text-center font-semibold">Actions</th>
@@ -94,6 +99,7 @@ const ItemList = () => {
                         {items.map(item => (
                             <tr key={item.id} className="border-t hover:bg-gray-50">
                                 <td className="py-4 px-6">{item.name}</td>
+                                <td className="py-4 px-6">{item.price}</td>
                                 <td className="py-4 px-6 text-gray-600">{item.description}</td>
                                 <td className="py-4 px-6 text-center">
                                     {item.image && <img src={item.image} alt={item.name} width={50} className="mx-auto" />}
@@ -131,6 +137,14 @@ const ItemList = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Name"
+                        required
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                    <input
+                        type="number"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        placeholder="Price"
                         required
                         className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
