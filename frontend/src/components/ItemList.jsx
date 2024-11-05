@@ -5,6 +5,7 @@ const ItemList = () => {
     const [items, setItems] = useState([]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [image, setImage] = useState(null);  // To store the selected image
     const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
@@ -15,22 +16,46 @@ const ItemList = () => {
         const res = await axios.get('http://localhost:8000/api/items/');
         setItems(res.data);
     };
+    const fileInputRef = React.useRef(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const newItem = { name, description };
-
-        if (editingId) {
-            await axios.put(`http://localhost:8000/api/items/${editingId}/`, newItem);
-        } else {
-            await axios.post('http://localhost:8000/api/items/', newItem);
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('description', description);
+        if (image) {
+            formData.append('image', image);  // Append image if provided
         }
 
-        setName('');
-        setDescription('');
-        setEditingId(null);
-        fetchItems();
+        try {
+            if (editingId) {
+                // If editing, send a PUT request
+                await axios.put(`http://localhost:8000/api/items/${editingId}/`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',  // Ensure the content type is multipart/form-data
+                    },
+                });
+            } else {
+                // If adding, send a POST request
+                await axios.post('http://localhost:8000/api/items/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            }
+
+            setName('');
+            setDescription('');
+            setImage(null);  // Clear the image after submitting
+            setEditingId(null);
+
+            fileInputRef.current.value = '';
+
+            fetchItems();
+        } catch (error) {
+            console.error("There was an error submitting the form", error);
+        }
     };
 
     const handleDelete = async (id) => {
@@ -41,7 +66,12 @@ const ItemList = () => {
     const handleEdit = (item) => {
         setName(item.name);
         setDescription(item.description);
+        setImage(null);  // Reset the image when editing (not required, but can be useful)
         setEditingId(item.id);
+    };
+
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
     };
 
     return (
@@ -59,7 +89,9 @@ const ItemList = () => {
                         <div>
                             <h2 className="text-xl font-semibold">{item.name}</h2>
                             <p className="text-gray-600">{item.description}</p>
+                            {item.image && <img src={item.image} alt={item.name} width={100} />}
                         </div>
+                        <div>Click to Edit</div>
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -92,6 +124,13 @@ const ItemList = () => {
                         required
                         className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+                    <input
+                        type="file"
+                        onChange={handleImageChange}
+                        className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+                        ref={fileInputRef}
+                    />
+                    {image && <p>Image selected: {image.name}</p>}
                     <button
                         type="submit"
                         className="w-full bg-indigo-600 text-white p-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
