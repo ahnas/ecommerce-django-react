@@ -79,31 +79,48 @@ const ItemList = () => {
             <h1 className="text-3xl font-bold mb-6 text-center">Item List</h1>
 
             {/* Item List */}
-            <ul className="space-y-4">
-                {items.map(item => (
-                    <li
-                        onClick={() => handleEdit(item)}
-                        key={item.id}
-                        className="flex justify-between items-center bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                    >
-                        <div>
-                            <h2 className="text-xl font-semibold">{item.name}</h2>
-                            <p className="text-gray-600">{item.description}</p>
-                            {item.image && <img src={item.image} alt={item.name} width={100} />}
-                        </div>
-                        <div>Click to Edit</div>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(item.id);
-                            }}
-                            className="text-red-500 hover:text-red-700 font-semibold"
-                        >
-                            Delete
-                        </button>
-                    </li>
-                ))}
-            </ul>
+            {/* Table structure */}
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table className="min-w-full table-auto">
+                    <thead className="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th className="py-3 px-6 text-left font-semibold">Name</th>
+                            <th className="py-3 px-6 text-left font-semibold">Description</th>
+                            <th className="py-3 px-6 text-center font-semibold">Image</th>
+                            <th className="py-3 px-6 text-center font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map(item => (
+                            <tr key={item.id} className="border-t hover:bg-gray-50">
+                                <td className="py-4 px-6">{item.name}</td>
+                                <td className="py-4 px-6 text-gray-600">{item.description}</td>
+                                <td className="py-4 px-6 text-center">
+                                    {item.image && <img src={item.image} alt={item.name} width={50} className="mx-auto" />}
+                                </td>
+                                <td className="py-4 px-6 text-center">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDelete(item.id);
+                                        }}
+                                        className="text-red-500 hover:text-red-700 font-semibold"
+                                    >
+                                        Delete
+                                    </button>
+                                    <button
+                                        onClick={() => handleEdit(item)}
+                                        className="ml-3 text-blue-500 hover:text-blue-700 font-semibold"
+                                    >
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
 
             {/* Add or Edit Item Form */}
             <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
