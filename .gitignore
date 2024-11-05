@@ -4,4 +4,5 @@ myenv/
 # Ignore the 'node_modules' folder inside the 'frontend' folder
 frontend/node_modules/
 
+# Ignore the 'build' folder inside the 'frontend' folder
 frontend/build/
