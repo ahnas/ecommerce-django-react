@@ -8,6 +8,8 @@ const ItemList = () => {
     const [price, setPrice] = useState(0);
     const [image, setImage] = useState(null);
     const [editingId, setEditingId] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         fetchItems();
@@ -28,24 +30,24 @@ const ItemList = () => {
         formData.append('price', price);
         formData.append('description', description);
         if (image) {
-            formData.append('image', image);  // Append image if provided
+            formData.append('image', image);
         }
 
         try {
             if (editingId) {
-                // If editing, send a PUT request
                 await axios.put(`http://localhost:8000/api/items/${editingId}/`, formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data',  // Ensure the content type is multipart/form-data
+                        'Content-Type': 'multipart/form-data',
                     },
                 });
+                setSuccessMessage('Item updated successfully!');
             } else {
-                // If adding, send a POST request
                 await axios.post('http://localhost:8000/api/items/', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
+                setSuccessMessage('Item added successfully!');
             }
 
             setName('');
@@ -57,13 +59,24 @@ const ItemList = () => {
             fileInputRef.current.value = '';
 
             fetchItems();
+            setTimeout(() => {
+                setSuccessMessage('');
+            }, 3000);
         } catch (error) {
-            console.error("There was an error submitting the form", error);
+            console.error("There was an error submitting the form", error.response.data.name[0]);
+            setErrorMessage(error.response.data.name[0]);
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
         }
     };
 
     const handleDelete = async (id) => {
         await axios.delete(`http://localhost:8000/api/items/${id}/`);
+        setErrorMessage('Item Deleted Successfully');
+        setTimeout(() => {
+            setErrorMessage('');
+        }, 3000);
         fetchItems();
     };
 
@@ -83,7 +96,18 @@ const ItemList = () => {
         <div className="container mx-auto p-6">
             <h1 className="text-3xl font-bold mb-6 text-center">Item List</h1>
 
+            {/* Success/Error Message */}
+            {successMessage && (
+                <div className="bg-green-100 text-green-700 p-4 rounded-lg mb-4">
+                    {successMessage}
+                </div>
+            )}
 
+            {errorMessage && (
+                <div className="bg-red-100 text-red-700 p-4 rounded-lg mb-4">
+                    {errorMessage}
+                </div>
+            )}
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="min-w-full table-auto">
                     <thead className="bg-gray-100 text-gray-700">
