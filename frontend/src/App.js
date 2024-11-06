@@ -5,9 +5,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import ItemList from './components/ItemList';
 import Header from './components/Header';
 import ProductPage from './components/ProductPage';
+import Home from './components/Home';
 
-
-const Home = () => <h2 className="text-xl font-semibold">Home Page</h2>;
 
 
 const App = () => {
