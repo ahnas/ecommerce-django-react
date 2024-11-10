@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const Home = () => {
     const [tudos, setTudos] = useState(() => JSON.parse(localStorage.getItem('tudos') || '[]'));
@@ -10,26 +10,37 @@ const Home = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [message, setMessage] = useState('')
     const [bgColor, setBgColor] = useState('')
+    const [image, setImage] = useState(null);
 
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         localStorage.setItem('tudos', JSON.stringify(tudos));
         localStorage.setItem('idCounter', JSON.stringify(idCounter));
     }, [tudos, idCounter]);
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result); // This is the Base64 string of the image
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleSubmit = () => {
         if (title.trim() && body.trim()) {
             if (editId === null) {
-                const newTodo = { id: idCounter + 1, title: title.trim(), body: body.trim() };
+                const newTodo = { id: idCounter + 1, title: title.trim(), body: body.trim(), image: image };
                 setTudos([...tudos, newTodo]);
                 setIdCounter(idCounter + 1);
                 setBgColor('green');
                 setMessage('Item added successfully!')
-
             } else {
                 const updatedTudos = tudos.map((item) =>
-                    item.id === editId ? { ...item, title: title.trim(), body: body.trim() } : item
+                    item.id === editId ? { ...item, title: title.trim(), body: body.trim(), image: image } : item
                 );
                 setTudos(updatedTudos);
                 setEditId(null);
@@ -38,6 +49,8 @@ const Home = () => {
             }
             setTitle('');
             setBody('');
+            setImage(null);
+            fileInputRef.current.value = '';
         }
         setTimeout(() => {
             setMessage('')
@@ -48,6 +61,7 @@ const Home = () => {
         setEditId(item.id);
         setTitle(item.title);
         setBody(item.body);
+        setImage(item.image);
     };
 
     const handleDeleteClick = (id) => {
@@ -96,7 +110,12 @@ const Home = () => {
                     value={body}
                     onChange={(e) => setBody(e.target.value)}
                 />
-
+                <input
+                    type="file"
+                    className="w-full p-4 text-lg border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    onChange={handleImageChange}
+                    ref={fileInputRef}
+                />
 
 
                 <button
@@ -115,6 +134,7 @@ const Home = () => {
                         <th className="px-6 py-3 font-medium">ID</th>
                         <th className="px-6 py-3 font-medium">Title</th>
                         <th className="px-6 py-3 font-medium">Body</th>
+                        <th className="px-6 py-3 font-medium">Image</th>
                         <th className="px-6 py-3 font-medium">Actions</th>
                     </tr>
                 </thead>
@@ -124,6 +144,9 @@ const Home = () => {
                             <td className="px-6 py-4">{item.id}</td>
                             <td className="px-6 py-4">{item.title}</td>
                             <td className="px-6 py-4">{item.body}</td>
+                            <td className="px-6 py-4">
+                                {item.image && <img src={item.image} alt="Todo Image" className="w-16 h-16 object-cover rounded" />}
+                            </td>
                             <td className="px-6 py-4 space-x-4">
                                 <button
                                     className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-300"
