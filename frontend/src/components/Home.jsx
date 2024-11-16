@@ -87,6 +87,8 @@ const Home = () => {
 
 
 
+
+
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
             <h3 className="text-3xl font-bold text-center text-indigo-600 mb-8">Todo App with Local Storage</h3>
@@ -145,7 +147,7 @@ const Home = () => {
                             <td className="px-6 py-4">{item.title}</td>
                             <td className="px-6 py-4">{item.body}</td>
                             <td className="px-6 py-4">
-                                {item.image && <img src={item.image} alt="Todo Image" className="w-16 h-16 object-cover rounded" />}
+                                {item.image && <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded" />}
                             </td>
                             <td className="px-6 py-4 space-x-4">
                                 <button

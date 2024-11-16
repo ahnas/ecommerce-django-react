@@ -10,7 +10,7 @@ const ItemList = () => {
     const [editingId, setEditingId] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    
+
 
     useEffect(() => {
         fetchItems();
@@ -92,10 +92,11 @@ const ItemList = () => {
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
     };
+    console.log(items);
 
     return (
         <div className="container mx-auto p-6">
-            
+
 
             {/* Success/Error Message */}
             {successMessage && (
@@ -170,8 +171,20 @@ const ItemList = () => {
                                 <td className="py-4 px-6">{item.name}</td>
                                 <td className="py-4 px-6">{item.price}</td>
                                 <td className="py-4 px-6 text-gray-600">{item.description}</td>
-                                <td className="py-4 px-6 text-center">
-                                    {item.image && <img src={item.image} alt={item.name} width={50} className="mx-auto" />}
+                                <td className="py-4 px-6 display flex justify-center">
+                                    {item?.images?.length > 0 ? (
+                                        item.images.map((image, index) => (
+                                            <img
+                                                key={index}
+                                                src={image?.image}  // Assuming image object has 'image' property that holds the image URL
+                                                width={50}
+                                                className="mx-auto"
+                                                alt={`image-${index}`}  // Add alt text for accessibility
+                                            />
+                                        ))
+                                    ) : (
+                                        <span>No images available</span>
+                                    )}
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <button

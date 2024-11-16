@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ProductPage = () => {
     const [items, setItems] = useState([]);
@@ -37,6 +38,11 @@ const ProductPage = () => {
         setCartItems(prevItems => prevItems.filter(item => item.id !== itemToRemove.id));
     };
 
+    const navigate = useNavigate();
+    const handleItemClick = (item) => {
+        navigate(`/product-list/${item.name}`, { state: { item } });
+    };
+
 
     return (
         <div className="container mx-auto p-4">
@@ -61,16 +67,16 @@ const ProductPage = () => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className='flex justify-between '>
-                        <h2 className="text-2xl font-bold mb-4">Cart Items</h2>
-                        {/* Close Modal Button */}
-                        <div className="text-center">
-                            <button
-                                onClick={closeModal}
-                                className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600"
-                            >
-                                X
-                            </button>
-                        </div>
+                            <h2 className="text-2xl font-bold mb-4">Cart Items</h2>
+                            {/* Close Modal Button */}
+                            <div className="text-center">
+                                <button
+                                    onClick={closeModal}
+                                    className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
                         <div className="space-y-4">
                             {cartItems.length > 0 ? (
@@ -80,7 +86,7 @@ const ProductPage = () => {
                                         className="flex justify-between items-center border-b py-2"
                                     >
                                         <div className="flex items-center gap-4">
-                                            <img src={item.image} className="w-16 h-16 object-cover" alt="" />
+                                            <img src={item?.images?.[0]?.image || 'defaultImage.png'} className="w-16 h-16 object-cover" alt="" />
                                             <p className="font-semibold">{item.name}</p>
                                             <p className="text-sm text-gray-500">${item.price}</p>
                                         </div>
@@ -91,7 +97,7 @@ const ProductPage = () => {
                                 <p className="text-center text-gray-500">No items in the cart.</p>
                             )}
                         </div>
-                            
+
                         <div className="text-center mt-5">
                             <button
                                 onClick={() => console.log(cartItems)}
@@ -103,7 +109,7 @@ const ProductPage = () => {
                     </div>
                 </div>
             )}
-            
+
             {/* Grid of product cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {items.map((item) => (
@@ -113,20 +119,21 @@ const ProductPage = () => {
                     >
                         {/* Product Image */}
                         <img
-                            src={item.image || '/default-image.jpg'} // Default image in case the item doesn't have one
+                            onClick={() => handleItemClick(item)}
+                            src={item?.images?.[0]?.image || 'defaultImage.png'} // Default image in case the item doesn't have one
                             alt={item.name}
-                            className="w-full h-48 object-cover rounded-t-lg"
+                            className="w-full h-80 object-cover rounded-t-lg cursor-pointer"
                         />
 
-                        <div className="p-4">
+                        <div className="p-4" >
                             {/* Product Name */}
-                            <h2 className="text-xl font-semibold text-gray-800 truncate">{item.name}</h2>
+                            <h2 onClick={() => handleItemClick(item)} className="text-xl font-semibold text-gray-800 truncate">{item.name}</h2>
 
                             {/* Product Description */}
-                            <p className="text-gray-600 mt-2 text-sm">{item.description}</p>
+                            <p onClick={() => handleItemClick(item)} className="text-gray-600 mt-2 text-sm">{item.description}</p>
 
                             {/* Price and Buttons */}
-                            <div className="flex justify-between items-center mt-4">
+                            <div  className="flex justify-between items-center mt-4">
                                 <span className="text-lg font-semibold text-gray-800">
                                     ${item.price}
                                 </span>

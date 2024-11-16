@@ -1,8 +1,14 @@
 from rest_framework import serializers
-from .models import Item
+from .models import Item, ItemImage
+
+class ItemImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ItemImage
+        fields = ['id', 'image']
 
 class ItemSerializer(serializers.ModelSerializer):
+    images = ItemImageSerializer(many=True,required=False)
+
     class Meta:
         model = Item
-        fields = '__all__'
-        
+        fields = ['id', 'name', 'description', 'price', 'images']
