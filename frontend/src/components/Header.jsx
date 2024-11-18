@@ -31,6 +31,14 @@ const Header = () => {
                             Add Product
                         </Link>
                     </li>
+                    <li>
+                        <Link
+                            to="/drag-and-drop"
+                            className="text-white text-lg hover:text-gray-400 transition duration-300"
+                        >
+                            Drag and Drop
+                        </Link>
+                    </li>
                 </ul>
             </nav>
         </header>

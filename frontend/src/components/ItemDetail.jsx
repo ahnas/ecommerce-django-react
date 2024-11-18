@@ -58,18 +58,25 @@ const ItemDetail = () => {
                     <>
                         <button
                             onClick={prevImage}
-                            className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2 shadow-lg hover:bg-gray-800 transition-all"
+                            className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full p-3 shadow-lg hover:bg-gradient-to-r hover:from-blue-700 hover:to-blue-900 transition-all ease-in-out duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            aria-label="Previous Image"
                         >
-                            &#8592;
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
                         </button>
                         <button
                             onClick={nextImage}
-                            className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2 shadow-lg hover:bg-gray-800 transition-all"
+                            className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-l from-blue-500 to-blue-700 text-white rounded-full p-3 shadow-lg hover:bg-gradient-to-l hover:from-blue-700 hover:to-blue-900 transition-all ease-in-out duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            aria-label="Next Image"
                         >
-                            &#8594;
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
                         </button>
                     </>
                 )}
+
             </div>
 
             {/* Item Description */}

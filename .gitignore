@@ -2,14 +2,15 @@
 myenv/
 backend/db.sqlite3
 backend/api/__pycache__/
+backend/backend/__pycache__/
 backend/api/migrations/
+backend/media/
 
 
 frontend/node_modules/
 frontend/build/
-backend/media/
 
 
-# Alternatively, if you want to ignore specific files and folders in the 'backend':
-backend/media/
+
+
 
