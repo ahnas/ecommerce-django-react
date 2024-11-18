@@ -55,7 +55,7 @@ const DragAndDrop = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex justify-center">
         <div className="border border-gray-300 p-8 rounded-lg shadow-lg bg-white w-full max-w-2xl">
           <h1 className="text-2xl font-bold text-center mb-6">Drag and Drop Example</h1>
           <div className="flex justify-between">
