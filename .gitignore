@@ -1,10 +1,16 @@
-# Ignore the 'myenv' folder at the root
+
 myenv/
 
-# Ignore the 'node_modules' folder inside the 'frontend' folder
+
 frontend/node_modules/
 
-# Ignore the 'build' folder inside the 'frontend' folder
+
 frontend/build/
 
 backend/media/
+
+
+# Alternatively, if you want to ignore specific files and folders in the 'backend':
+backend/media/
+backend/api/__pycache__/
+backend/db.sqlite3

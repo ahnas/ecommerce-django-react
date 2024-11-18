@@ -1,3 +1,5 @@
+# views.py
+
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -10,13 +12,6 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     parser_classes = [MultiPartParser, FormParser]
 
-    @action(detail=True, methods=['get'], url_path='images')
-    def get_images(self, request, pk=None):
-        item = self.get_object()
-        images = item.images.all()
-        serializer = ItemImageSerializer(images, many=True)
-        return Response(serializer.data)
-
     @action(detail=True, methods=['post'], url_path='upload-images')
     def upload_images(self, request, pk=None):
         item = self.get_object() 
@@ -28,3 +23,17 @@ class ItemViewSet(viewsets.ModelViewSet):
             uploaded_images.append(ItemImageSerializer(item_image).data)
 
         return Response(uploaded_images, status=201)
+
+    def perform_create(self, serializer):
+        item = serializer.save()
+        # Upload images if provided
+        images = self.request.FILES.getlist('images')
+        for img in images:
+            ItemImage.objects.create(item=item, image=img)
+
+    def perform_update(self, serializer):
+        item = serializer.save()
+        # Update images if provided
+        images = self.request.FILES.getlist('images')
+        for img in images:
+            ItemImage.objects.create(item=item, image=img)

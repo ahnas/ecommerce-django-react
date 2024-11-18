@@ -31,7 +31,7 @@ const ItemList = () => {
         formData.append('price', price);
         formData.append('description', description);
         if (image) {
-            formData.append('image', image);
+            formData.append('images', image); // Use 'images' to match the backend
         }
 
         try {
@@ -51,26 +51,48 @@ const ItemList = () => {
                 setSuccessMessage('Item added successfully!');
             }
 
+            // Reset form fields
             setName('');
             setPrice('');
             setDescription('');
-            setImage(null);  // Clear the image after submitting
+            setImage(null);
             setEditingId(null);
-
             fileInputRef.current.value = '';
 
-            fetchItems();
+            fetchItems(); // Refresh items list
             setTimeout(() => {
                 setSuccessMessage('');
             }, 3000);
         } catch (error) {
-            console.error("There was an error submitting the form", error.response.data.name[0]);
-            setErrorMessage(error.response.data.name[0]);
+            let errorMessage = 'An error occurred: ';
+            const errorData = error?.response?.data;
+            if (errorData) {
+                const messages = [];
+                if (errorData.name) {
+                    messages.push(`Name: ${errorData.name.join(', ')}`);
+                }
+                if (errorData.price) {
+                    messages.push(`Price: ${errorData.price.join(', ')}`);
+                }
+                if (errorData.description) {
+                    messages.push(`Description: ${errorData.description.join(', ')}`);
+                }
+                if (messages.length > 0) {
+                    errorMessage += messages.join('. ') + '.';
+                } else {
+                    errorMessage += 'Unknown error occurred.';
+                }
+            } else {
+                errorMessage += 'Please try again later.';
+            }
+
+            setErrorMessage(errorMessage.trim());
             setTimeout(() => {
                 setErrorMessage('');
             }, 3000);
         }
     };
+
 
     const handleDelete = async (id) => {
         await axios.delete(`http://localhost:8000/api/items/${id}/`);
@@ -90,9 +112,9 @@ const ItemList = () => {
     };
 
     const handleImageChange = (e) => {
-        setImage(e.target.files[0]);
+        const files = Array.from(e.target.files);
+        setImage(files[0]);
     };
-    console.log(items);
 
     return (
         <div className="container mx-auto p-6">
@@ -175,11 +197,11 @@ const ItemList = () => {
                                     {item?.images?.length > 0 ? (
                                         item.images.map((image, index) => (
                                             <img
+                                                style={{ width: '50px', height: '80px' }}
                                                 key={index}
-                                                src={image?.image}  // Assuming image object has 'image' property that holds the image URL
-                                                width={50}
+                                                src={image?.image}
                                                 className="mx-auto"
-                                                alt={`image-${index}`}  // Add alt text for accessibility
+                                                alt={`image-${index}`}
                                             />
                                         ))
                                     ) : (
