@@ -26,14 +26,23 @@ class ItemViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         item = serializer.save()
-        # Upload images if provided
         images = self.request.FILES.getlist('images')
         for img in images:
             ItemImage.objects.create(item=item, image=img)
 
     def perform_update(self, serializer):
         item = serializer.save()
-        # Update images if provided
         images = self.request.FILES.getlist('images')
         for img in images:
             ItemImage.objects.create(item=item, image=img)
+
+
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = ItemImage.objects.all()
+    serializer_class = ItemImageSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
+    def perform_create(self, serializer):
+        item = serializer.validated_data['item']
+        image = serializer.validated_data['image']
+        ItemImage.objects.create(item=item, image=image)

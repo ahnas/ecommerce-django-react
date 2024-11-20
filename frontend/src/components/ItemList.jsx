@@ -10,7 +10,9 @@ const ItemList = () => {
     const [editingId, setEditingId] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-
+    const [imgDelete, setImgDelete] = useState(false);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+    const [itemImages, setItemImages] = useState([]);
 
     useEffect(() => {
         fetchItems();
@@ -53,10 +55,11 @@ const ItemList = () => {
 
             // Reset form fields
             setName('');
-            setPrice('');
+            setPrice(0);
             setDescription('');
             setImage(null);
             setEditingId(null);
+            setSelectedImageIndex(null); // Reset selected image index
             fileInputRef.current.value = '';
 
             fetchItems(); // Refresh items list
@@ -93,7 +96,6 @@ const ItemList = () => {
         }
     };
 
-
     const handleDelete = async (id) => {
         await axios.delete(`http://localhost:8000/api/items/${id}/`);
         setErrorMessage('Item Deleted Successfully');
@@ -107,8 +109,11 @@ const ItemList = () => {
         setName(item.name);
         setPrice(item.price);
         setDescription(item.description);
+        setItemImages(item.images); 
         setImage(null);
         setEditingId(item.id);
+        setImgDelete(true); 
+        setSelectedImageIndex(null); 
     };
 
     const handleImageChange = (e) => {
@@ -116,9 +121,23 @@ const ItemList = () => {
         setImage(files[0]);
     };
 
+    const handleImageDelete = async (imageId) => {
+        const updatedImages = itemImages.filter((img) => img.id !== imageId);
+        setItemImages(updatedImages);
+        try {
+            await axios.delete(`http://localhost:8000/api/images/${imageId}/`);
+            setErrorMessage('Image deleted successfully');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000)
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            setItemImages(itemImages);
+        }
+    };
+
     return (
         <div className="container mx-auto p-6">
-
 
             {/* Success/Error Message */}
             {successMessage && (
@@ -166,6 +185,32 @@ const ItemList = () => {
                         ref={fileInputRef}
                     />
                     {image && <p>Image selected: {image.name}</p>}
+
+                    {editingId && itemImages.length > 0 && (
+                        <div className="mb-4">
+                            <h3 className="font-semibold">Current Images:</h3>
+                            <div className="flex flex-wrap">
+                                {itemImages.map((img, index) => (
+                                    <div key={index} className="relative mx-2 mr-6">
+                                        <img
+                                            style={{ width: '50px', height: '80px' }}
+                                            src={img.image}
+                                            className="mx-auto"
+                                            alt={`image-${index}`}
+                                        />
+                                        <div
+                                            onClick={() => handleImageDelete(img.id)}
+                                            className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center cursor-pointer"
+                                            aria-label="Close image"
+                                        >
+                                            &times;
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     <button
                         type="submit"
                         className="w-full bg-indigo-600 text-white p-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
@@ -193,16 +238,17 @@ const ItemList = () => {
                                 <td className="py-4 px-6">{item.name}</td>
                                 <td className="py-4 px-6">{item.price}</td>
                                 <td className="py-4 px-6 text-gray-600">{item.description}</td>
-                                <td className="py-4 px-6 display flex justify-center">
+                                <td className="py-4 px-6 display flex justify-evenly">
                                     {item?.images?.length > 0 ? (
                                         item.images.map((image, index) => (
-                                            <img
-                                                style={{ width: '50px', height: '80px' }}
-                                                key={index}
-                                                src={image?.image}
-                                                className="mx-auto"
-                                                alt={`image-${index}`}
-                                            />
+                                            <div key={index} className="relative mx-2">
+                                                <img
+                                                    style={{ width: '50px', height: '80px' }}
+                                                    src={image?.image}
+                                                    className="mx-auto"
+                                                    alt={`image-${index}`}
+                                                />
+                                            </div>
                                         ))
                                     ) : (
                                         <span>No images available</span>
@@ -230,9 +276,6 @@ const ItemList = () => {
                     </tbody>
                 </table>
             </div>
-
-
-
         </div>
     );
 };
