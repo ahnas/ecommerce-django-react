@@ -109,11 +109,11 @@ const ItemList = () => {
         setName(item.name);
         setPrice(item.price);
         setDescription(item.description);
-        setItemImages(item.images); 
+        setItemImages(item.images);
         setImage(null);
         setEditingId(item.id);
-        setImgDelete(true); 
-        setSelectedImageIndex(null); 
+        setImgDelete(true);
+        setSelectedImageIndex(null);
     };
 
     const handleImageChange = (e) => {
@@ -193,17 +193,18 @@ const ItemList = () => {
                                 {itemImages.map((img, index) => (
                                     <div key={index} className="relative mx-2 mr-6">
                                         <img
-                                            style={{ width: '50px', height: '80px' }}
+                                            style={{ width: '80px', height: '100px' }}
                                             src={img.image}
                                             className="mx-auto"
                                             alt={`image-${index}`}
                                         />
                                         <div
                                             onClick={() => handleImageDelete(img.id)}
-                                            className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center cursor-pointer"
-                                            aria-label="Close image"
+                                            className=" absolute top-0 right-0 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-full p-1 hover:from-red-700 hover:to-red-900 cursor-pointer"
                                         >
-                                            &times;
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
                                         </div>
                                     </div>
                                 ))}

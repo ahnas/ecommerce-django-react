@@ -28,7 +28,7 @@ const Header = () => {
                             to="/product-list"
                             className="text-white text-lg hover:text-gray-400 transition duration-300"
                         >
-                            Product List
+                            Product Page
                         </Link>
                     </li>
                     <li>
