@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const DragAndDrop = () => {
-  const [droppedItems, setDroppedItems] = useState([]);
+  const [droppedItems, setDroppedItems] = useState(() => JSON.parse(localStorage.getItem('droppedItems')) || []);
 
+  useEffect(() => {
+    localStorage.setItem('droppedItems', JSON.stringify(droppedItems));
+  }, [droppedItems]);
+
+  
   const handleDrop = (item) => {
     setDroppedItems((prevItems) => [...prevItems, item]);
   };
@@ -33,6 +38,7 @@ const DragAndDrop = () => {
       </div>
     );
   };
+
 
   const DropZone = ({ onDrop }) => {
     const [{ isOver }, drop] = useDrop(() => ({
