@@ -153,7 +153,7 @@ const ItemList = () => {
             )}
             {/* Add or Edit Item Form */}
             <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold mb-4">{editingId ? 'Edit Item' : 'Add New Item'}</h2>
+            <h2 className="text-2xl font-semibold mb-4">{editingId ? 'Edit Item' : 'Add New Item'}</h2>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
@@ -257,20 +257,21 @@ const ItemList = () => {
                                 </td>
                                 <td className="py-4 px-6 text-center">
                                     <button
+                                        onClick={() => handleEdit(item)}
+                                        className="bg-yellow-500 text-white p-2 rounded-lg mr-2"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             handleDelete(item.id);
                                         }}
-                                        className="text-red-500 hover:text-red-700 font-semibold"
+                                        className="bg-red-500 text-white p-2 rounded-lg"
                                     >
                                         Delete
                                     </button>
-                                    <button
-                                        onClick={() => handleEdit(item)}
-                                        className="ml-3 text-blue-500 hover:text-blue-700 font-semibold"
-                                    >
-                                        Edit
-                                    </button>
+
                                 </td>
                             </tr>
                         ))}
